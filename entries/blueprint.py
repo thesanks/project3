@@ -23,7 +23,7 @@ def tag_index():
 def tag_detail(slug):
     tag = Tag.query.filter(Tag.slug == slug).first_or_404()
     entries = tag.entries.order_by(Entry.created_timestamp.desc())
-    return entry_list('entries/tag_detail.html', entries, tag=tag)
+    return entry_list   ('entries/tag_detail.html', entries, tag=tag)
 
 
 @entries.route('/<slug>/')
@@ -32,6 +32,8 @@ def detail(slug):
     return render_template('entries/detail.html', entry=entry)
 
 # bit like object_list helper
+# returns PaginatedQuery object
+# so can use to paginate
 def entry_list(template, query, **context):
     search = request.args.get('q')
     if search:
