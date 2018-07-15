@@ -75,9 +75,13 @@ def detail(slug):
 # returns PaginatedQuery object
 # so can use to paginate
 def entry_list(template, query, **context):
-    search = request.args.get('q')
-    if search:
+    valid_statuses = (Entry.STATUS_PUBLIC, Entry.STATUS_DRAFT)
+    query = query.filter(Entry.status.in_(valid_statuses))
+    if request.args.get('q'):
+        search = request.args['q']
         query = query.filter(
             (Entry.body.contains(search)) |
             (Entry.title.contains(search)))
     return object_list(template, query, **context)
+
+    

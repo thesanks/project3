@@ -35,6 +35,13 @@ class Entry(db.Model):
         if self.title:
             self.slug = slugify(self.title)
 
+    def get_entry_or_404(slug):
+      valid_statuses = (Entry.STATUS_PUBLIC, Entry.STATUS_DRAFT) (Entry.query
+              .filter(
+                  (Entry.slug == slug) &
+                  (Entry.status.in_(valid_statuses)))
+              .first_or_404())
+
     def __repr__(self):
         return '<Entry: {}'.format(self.title)
 
