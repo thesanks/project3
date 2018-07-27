@@ -1,16 +1,17 @@
 import os
 
 from flask import Blueprint, flash, redirect, render_template, request, url_for
+from flask_login import login_required
 from app import app, db
 from entries.forms import EntryForm, ImageForm
 from helpers import object_list
 from models import Entry, Tag
 from werkzeug import secure_filename
 
-
 entries = Blueprint('entries', __name__, template_folder='templates')
 
 @entries.route('/image-upload/', methods=['GET', 'POST'])
+@login_required
 def image_upload():
     if request.method == 'POST':
         form = ImageForm(request.form)
@@ -35,6 +36,7 @@ def index():
 
 # @entries.route('/create/')
 @entries.route('/create/', methods=['GET', 'POST'])
+@login_required
 def create():
     if request.method == 'POST':
         form = EntryForm(request.form)
@@ -50,6 +52,7 @@ def create():
 
 
 @entries.route('/<slug>/edit/', methods=['GET', 'POST'])
+@login_required
 def edit(slug):
     entry = Entry.query.filter(Entry.slug == slug).first_or_404()
     if request.method == 'POST':
@@ -65,6 +68,7 @@ def edit(slug):
     return render_template('entries/edit.html', entry=entry, form=form)
 
 @entries.route('/<slug>/delete/', methods=['GET', 'POST'])
+@login_required
 def delete(slug):
     entry = Entry.query.filter(Entry.slug == slug).first_or_404()
     if request.method == 'POST':
