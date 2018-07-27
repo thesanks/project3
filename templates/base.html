@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>{% block title %}{% endblock %} | My Blog</title>
+    <title>{% block title %}{% endblock %} | Project 3</title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
     <style type="text/css">
       body { padding-top: 60px; }
@@ -12,6 +12,7 @@
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
     {% block extra_scripts %}{% endblock %}
+     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
   </head>
 
   <body class="{% block body_class %}{% endblock %}">
@@ -24,21 +25,60 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">{% block branding %}My Blog{% endblock %}</a>
+          <a class="navbar-brand" href="#">{% block branding %}<img class='logo' src="{{url_for('static', filename='img/grav-logo.png')}}"{% endblock %}</a>
         </div>
         <div class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
+          <ul class="nav navbar-nav pull-right">
             <li><a href="{{ url_for('homepage') }}">Home</a></li>
             <li><a href="{{ url_for('entries.index') }}">Blog</a></li>
+            <li><a href="{{ url_for('entries.index') }}">Link</a></li>
+            <li><a href="{{ url_for('entries.index') }}">Link</a></li>
+            <li><a href="{{ url_for('entries.index') }}">Link</a></li>
+            <button type="button" name="button" class='btn btn-success'>Something</button>
             {% block extra_nav %}{% endblock %}
           </ul>
         </div>
       </div>
     </div>
     <div class="container">
+      <section id='hero'>
+        <div class="row">
+          <div class="col-sm-6">
+            <img src="{{url_for('static', filename='img/plabe.png')}}" class='plabe'/>
+            <div class="hero_txt">
+
+
+            <h1>Data Science Blog</h1>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum do eiusmod tempor incididunt ut.</p>
+            <form class="form-inline" method="get" role="form">
+              <div class="input-group">
+                <input class="form-control input-xs" name="q" placeholder="Search..." value="{{ request.args.get('q', '') }}" />
+                <span class="input-group-btn">
+                  <button class="btn btn-default" type="submit">Go</button>
+                </span>
+              </div>
+            </form>
+
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <img src="{{url_for('static', filename='img/flasl_blog.png')}}" class='hero_img' />
+
+          </div>
+        </div>
+      </section>
+      <!-- <img src="{{url_for('static', filename='img/ddd.png')}}" class='hed' /> -->
+
+
       <div class="row">
         <div class="col-md-9">
           <h1>{% block content_title %}{% endblock %}</h1>
+            {% for category, message in get_flashed_messages(with_categories=true) %}
+              <div class="alert alert-dismissable alert-{{ category }}">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                {{ message }}
+              </div>
+            {% endfor %}
           {% block content %}
           {% endblock %}
         </div>
