@@ -1,11 +1,31 @@
+import os
+
 from flask import Blueprint, flash, redirect, render_template, request, url_for
-from app import db, app
-from entries.forms import EntryForm
+from app import app, db
+from entries.forms import EntryForm, ImageForm
 from helpers import object_list
 from models import Entry, Tag
+from werkzeug import secure_filename
 
 
 entries = Blueprint('entries', __name__, template_folder='templates')
+
+@entries.route('/image-upload/', methods=['GET', 'POST'])
+def image_upload():
+    if request.method == 'POST':
+        form = ImageForm(request.form)
+        if form.validate():
+            image_file = request.files['file']
+            filename = os.path.join(app.config['IMAGES_DIR'],
+                                    secure_filename(image_file.filename))
+            image_file.save(filename)
+            flash('Saved %s' % os.path.basename(filename), 'success')
+            return redirect(url_for('entries.index'))
+    else:
+        form = ImageForm()
+
+    return render_template('entries/image_upload.html', form=form)
+
 
 @entries.route('/')
 def index():
